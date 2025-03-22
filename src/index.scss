@@ -1,0 +1,42 @@
+@use './shared/styles/theme.scss';
+
+html,
+body,
+#root,
+.app-wrap {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    color: #777;
+    word-spacing: 3px;
+    font-family: Monaco, sans-serif;
+    user-select: none;
+}
+
+.app-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid theme.$primary-color;
+    color: theme.$primary-color;
+    padding: 15px;
+    word-spacing: 3px;
+    letter-spacing: 1px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input {
+    border-radius: 0;
+    padding: 10px;
+    border: 1px solid theme.$primary-color;
+    outline: none;
+    box-shadow: none;
+
+    &::placeholder {
+        color: theme.$placeholder-color;
+    }
+}

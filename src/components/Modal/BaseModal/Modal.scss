@@ -1,0 +1,43 @@
+ @use '../../../shared/styles/zIndex.scss';
+ @use '../../../shared/styles/theme.scss';
+
+ .modal-overlay {
+     position: fixed;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     z-index: zIndex.$modalOverlay;
+
+     .modal-container {
+         background-color: theme.$background-color;
+         padding: 50px 25px;
+         border: 1px solid theme.$primary-color;
+         min-width: 400px;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+
+         h4 {
+             margin: 0 0 25px 0;
+             font-weight: 500;
+             font-style: italic;
+
+             &::after {
+                 content: '';
+                 display: block;
+                 width: 40px;
+                 border-bottom: 1px solid theme.$primary-color;
+                 margin: 20px auto;
+             }
+         }
+
+         button {
+             margin-top: 30px;
+             width: 100%;
+         }
+     }
+ }
