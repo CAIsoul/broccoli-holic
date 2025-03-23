@@ -16,12 +16,16 @@ export interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = (props) => {
-    let { isOpen, title, children, isInProgress,
+    const { isOpen, title, children, isInProgress,
         closeOnOverlay, applyBtnLabel, applyBtnInProgresLabel,
         applyBtnErrorLabel, onApply, onCancel } = props;
 
-    function handleOverlayMouseDown(evt: any) {
+    function handleOverlayMouseDown(_: any) {
+        console.log('[handleOverlayMouseDown]');
+
         if (closeOnOverlay) {
+
+            console.log('[onCancel]');
             onCancel();
         }
     }
@@ -40,6 +44,7 @@ const Modal: React.FC<ModalProps> = (props) => {
 
     return (
         <div className={`modal-overlay ${isOpen ? 'open' : ''} ${isInProgress ? 'in-progress' : ''}`}
+            role="dialog"
             onMouseDown={handleOverlayMouseDown}
         >
             <div className="modal-container" onMouseDown={handleModalMouseDown}>

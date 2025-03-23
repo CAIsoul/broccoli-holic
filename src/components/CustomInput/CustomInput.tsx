@@ -46,7 +46,7 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
     private type: string;
     private name: string;
     private placeholder: string;
-    private pendingValidation: number | undefined;
+    private pendingValidation: any;
 
     constructor(props: CustomInputProps) {
         super(props);

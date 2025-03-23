@@ -1,6 +1,6 @@
-export function validateFullName(fullname: string, ignoreWhitespace: boolean = false) {
-    if (ignoreWhitespace) {
-        fullname = fullname.replaceAll(' ', '');
+export function validateFullName(fullname: string, shouldTrim: boolean = false) {
+    if (shouldTrim) {
+        fullname = fullname.trim();
     }
 
     return fullname.length >= 3;

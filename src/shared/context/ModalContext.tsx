@@ -29,8 +29,8 @@ const defaultModalProps: ModalProps = {
 export const ModalContext = createContext<ContextProps>({});
 
 // ModalProvider Class Component
-export class ModalProvider extends Component<ModalProps, ModalState>{
-    constructor(props: ModalProps) {
+export class ModalProvider extends Component<{ children: React.ReactNode }, ModalState>{
+    constructor(props: any) {
         super(props);
 
         // Initialize state
