@@ -63,7 +63,7 @@ export class ModalProvider extends Component<ModalProps, ModalState>{
     closeModal() {
         this.setState({
             isModalOpen: false,
-            modalData: defaultModalProps,
+            modalData: { ...defaultModalProps },
         });
     }
 
@@ -93,7 +93,7 @@ export class ModalProvider extends Component<ModalProps, ModalState>{
         if (typeof modalData.onApply === 'function') {
             modalData.onApply();
         } else {
-            this.setState({ isModalOpen: false });
+            this.setState({ modalData: { ...defaultModalProps }, isModalOpen: false });
         }
     }
 
@@ -103,7 +103,7 @@ export class ModalProvider extends Component<ModalProps, ModalState>{
         if (typeof modalData.onCancel === 'function') {
             modalData.onCancel();
         } else {
-            this.setState({ isModalOpen: false });
+            this.setState({ modalData: { ...defaultModalProps }, isModalOpen: false });
         }
     }
 

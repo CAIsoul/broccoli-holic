@@ -32,8 +32,8 @@
      }
 
      .modal-container {
-         min-width: 90%;
-         max-width: 300px;
+         max-width: 90%;
+         min-width: 350px;
          box-sizing: border-box;
          background-color: theme.$background-color;
          padding: 20px;
@@ -48,7 +48,6 @@
          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 
          @media (min-width: 768px) {
-             min-width: 400px;
              padding: 50px 25px;
          }
 

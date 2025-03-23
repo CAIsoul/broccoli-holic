@@ -4,7 +4,6 @@ import RequestForm, { RequestInviteFormRef } from './components/Modal/RequestInv
 import { api } from './services/ApiService';
 
 import './App.scss'
-import { AxiosError } from 'axios';
 
 function App() {
   const { openModal, closeModal, setInProgressState, setApplyError } = useContext(ModalContext);
