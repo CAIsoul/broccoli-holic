@@ -9,3 +9,4 @@ export function validateFullName(fullname: string, ignoreWhitespace: boolean = f
 export function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+

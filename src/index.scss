@@ -13,6 +13,10 @@ body,
     user-select: none;
 }
 
+body {
+    overflow: hidden;
+}
+
 .app-wrap {
     display: flex;
     flex-direction: column;

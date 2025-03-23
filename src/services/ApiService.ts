@@ -3,6 +3,11 @@ import config from '../../config';
 import { getAxiosInstance } from "./AxiosService";
 
 const BASE_URL: string = config.baseApiUrl;
+const RESPONSE_TYPE = {
+    SUCCESS: 'Registered'
+};
+
+// usedemail@airwallex.com
 
 class ApiService {
     private _axios: AxiosInstance;
@@ -16,10 +21,6 @@ class ApiService {
         });
     }
 
-    setup(options: any) {
-
-    }
-
     /**
      * Request for an invitation.
      *
@@ -31,7 +32,7 @@ class ApiService {
     async requestForInvite(name: string, email: string) {
         try {
             const response = await this._axios.post('/fake-auth', { name, email });
-            return response.data;
+            return response.data === RESPONSE_TYPE.SUCCESS;
         }
         catch (error) {
             console.log('Error requesting for an inviate: ', error);

@@ -1,5 +1,6 @@
-import React, { ForwardedRef } from "react";
+import React from "react";
 import { validateEmail } from "../../services/ValidateService";
+import { ValidationItem } from "../../shared/models/Validation";
 
 export interface CustomInputRef {
     getValue: Function;
@@ -12,17 +13,33 @@ interface CustomInputProps {
     name: string;
     value?: string;
     placeholder?: string;
-    customValidator?: Function;
+    isRequired?: boolean;
+    extraValidators?: ValidationItem[];
 }
 
 interface CustomInputState {
-    value?: string;
-    error?: string;
+    value: string;
+    error: string;
     isTyping: boolean;
 }
 
+export const DEFAULT_VALIDATORS = {
+    REQUIRED: {
+        name: 'required',
+        validator: (val: string) => val !== '',
+        error: 'Required',
+        level: 5,
+    },
+    EMAIL_FORMAT: {
+        name: 'emailformat',
+        validator: (val: string) => !val || validateEmail(val),
+        error: 'Invalid email',
+        level: 1,
+    }
+}
+
 class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
-    private customValidator: Function | undefined;
+    private activeValidators: ValidationItem[];
     private id: string;
     private type: string;
     private name: string;
@@ -32,14 +49,14 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
     constructor(props: CustomInputProps) {
         super(props);
 
-        const { type, id, name, value,
-            placeholder = '', customValidator } = props;
+        const { type, id, name, value = '', isRequired = false,
+            placeholder = '', extraValidators = [] } = props;
 
         this.id = id;
         this.type = type;
         this.name = name;
         this.placeholder = placeholder;
-        this.customValidator = customValidator;
+        this.activeValidators = this.initValidators(type, isRequired, extraValidators);
 
         this.state = {
             value,
@@ -48,23 +65,58 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
         };
     }
 
+    /**
+     * Init validators for this custom input.
+     *
+     * @param {string} type
+     * @param {boolean} [isRequired=false]
+     * @param {ValidationItem[]} [extraValidators=[]]
+     * @return {*}  {ValidationItem[]}
+     * @memberof CustomInput
+     */
+    initValidators(
+        type: string,
+        isRequired: boolean = false,
+        extraValidators: ValidationItem[] = []): ValidationItem[] {
+        const validators = [];
+
+        validators.push(...extraValidators);
+
+        if (isRequired) {
+            validators.push(DEFAULT_VALIDATORS.REQUIRED);
+        }
+
+        switch (type) {
+            case 'email':
+                validators.push(DEFAULT_VALIDATORS.EMAIL_FORMAT);
+                break;
+            default:
+                break;
+        }
+
+        return validators;
+    }
+
     getValue() {
         return this.state.value;
     }
 
-    triggerValidation() {
+    triggerValidation(): boolean {
+        const errMsg = this.validateValue(this.state.value, 5);
+        this.setState({ error: errMsg });
 
+        return errMsg === '';
     }
 
     handleValueChange(evt: any) {
-        const VALIDATION_DELAY = 500;
+        const VALIDATION_DELAY = 800;
         const newVal = evt.target.value;
         this.setState({ value: newVal, isTyping: true });
 
         clearTimeout(this.pendingValidation);
         this.pendingValidation = setTimeout(
             () => {
-                const errMsg = this.validateValue(newVal, this.type);
+                const errMsg = this.validateValue(newVal, 1);
                 this.setState({
                     error: errMsg,
                     isTyping: false,
@@ -74,30 +126,16 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
         );
     }
 
-    validateValue(value: string | undefined, type: string): string {
-        console.log('Custom input validating...');
-
-        let errorMsg: string = '';
-
-        if (value) {
-            if (typeof this.customValidator === 'function') {
-                errorMsg = this.customValidator(value);
-            }
-            else {
-                let isValid = true;
-                switch (type) {
-                    case 'email':
-                        isValid = validateEmail(value);
-                        break;
-                    default:
-                        break;
-                }
-
-                errorMsg = isValid ? '' : `Invalid ${type}`;
-            }
-        }
-
-        return errorMsg;
+    /**
+     * Validate given value.
+     *
+     * @param {string} value
+     * @param {number} [level=5] ignore validators with higher level
+     * @return {*}  {string}
+     * @memberof CustomInput
+     */
+    validateValue(value: string, level: number = 5): string {
+        return this.activeValidators.find(v => v.level <= level && !v.validator(value))?.error ?? '';
     }
 
     render() {
@@ -135,7 +173,8 @@ const styles: any = {
         height: '15px',
         lineHeight: '15px',
         fontSize: '10px',
-        color: 'red'
+        color: 'red',
+        wordSpacing: '0'
     }
 }
 

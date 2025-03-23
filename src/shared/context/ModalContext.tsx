@@ -1,69 +1,142 @@
-import { createContext, useState } from "react";
-import Modal, { ModalProp } from "../../components/Modal/BaseModal/Modal";
+import { Component, createContext } from "react";
+import Modal, { ModalProps } from "../../components/Modal/BaseModal/Modal";
 
 interface ContextProps {
     openModal?: any;
     closeModal?: any;
+    setInProgressState?: any;
+    setApplyError?: any;
 }
 
-export const ModalContext = createContext<ContextProps>({});
-export const ModalProvider = ({ children }: any) => {
-    const [modalState, setModalState] = useState<ModalProp>();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+interface ModalState {
+    modalData: ModalProps;
+    isModalOpen: boolean;
+}
 
-    const openModal = (options: any) => {
-        const { title, content,
-            closeOnOverlay = false, applyBtnLabel = 'Apply',
-            onApply, onCancel } = options;
-
-        setModalState({
-            title: title,
-            children: content,
-            closeOnOverlay: closeOnOverlay,
-            applyBtnLabel: applyBtnLabel,
-            onApply: onApply,
-            onCancel: onCancel,
-        });
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setModalState(undefined);
-    };
-
-    function handleApply() {
-        if (typeof modalState?.onApply === 'function') {
-            modalState?.onApply();
-        } else {
-            setIsModalOpen(false);
-        }
-    }
-
-    function handleCancel() {
-        if (typeof modalState?.onCancel === 'function') {
-            modalState?.onCancel();
-        } else {
-            setIsModalOpen(false);
-        }
-    }
-
-    return (
-        <ModalContext.Provider value={{ openModal, closeModal }}>
-            <div className={`app-wrap ${isModalOpen ? 'modal-oepn' : ''}`} >
-                {children}
-            </div>
-            {
-                modalState && isModalOpen && <Modal
-                    title={modalState.title}
-                    applyBtnLabel={modalState.applyBtnLabel}
-                    closeOnOverlay={modalState.closeOnOverlay}
-                    onApply={handleApply}
-                    onCancel={handleCancel}
-                >
-                    {modalState.children}
-                </Modal>
-            }
-        </ModalContext.Provider>
-    );
+const defaultModalProps: ModalProps = {
+    title: '',
+    children: '',
+    isInProgress: false,
+    closeOnOverlay: false,
+    applyBtnLabel: 'Apply',
+    applyBtnInProgresLabel: 'Applying',
+    applyBtnErrorLabel: '',
+    onApply: null,
+    onCancel: null,
 };
+
+export const ModalContext = createContext<ContextProps>({});
+
+// ModalProvider Class Component
+export class ModalProvider extends Component<ModalProps, ModalState>{
+    constructor(props: ModalProps) {
+        super(props);
+
+        // Initialize state
+        this.state = {
+            modalData: defaultModalProps,
+            isModalOpen: false,
+        };
+
+        // Bind methods to `this`
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.setInProgressState = this.setInProgressState.bind(this);
+        this.setApplyError = this.setApplyError.bind(this);
+        this.handleApply = this.handleApply.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+    }
+
+    // Method to open the modal
+    openModal(options: any) {
+        this.setState({
+            modalData: {
+                ...defaultModalProps,
+                ...options,
+            },
+            isModalOpen: true,
+        });
+    }
+
+    // Method to close the modal
+    closeModal() {
+        this.setState({
+            isModalOpen: false,
+            modalData: defaultModalProps,
+        });
+    }
+
+    // Method to set the in-progress state
+    setInProgressState(isInProgress: boolean) {
+        this.setState((prevState) => ({
+            modalData: {
+                ...prevState.modalData,
+                isInProgress,
+            },
+        }));
+    }
+
+    // Method to set the apply error
+    setApplyError(error: string) {
+        this.setState((prevState) => ({
+            modalData: {
+                ...prevState.modalData,
+                applyBtnErrorLabel: error,
+            },
+        }));
+    }
+
+    // Method to handle the apply action
+    handleApply() {
+        const { modalData } = this.state;
+        if (typeof modalData.onApply === 'function') {
+            modalData.onApply();
+        } else {
+            this.setState({ isModalOpen: false });
+        }
+    }
+
+    // Method to handle the cancel action
+    handleCancel() {
+        const { modalData } = this.state;
+        if (typeof modalData.onCancel === 'function') {
+            modalData.onCancel();
+        } else {
+            this.setState({ isModalOpen: false });
+        }
+    }
+
+    render() {
+        const { modalData, isModalOpen } = this.state;
+        const { children } = this.props;
+
+        return (
+            <ModalContext.Provider
+                value={{
+                    openModal: this.openModal,
+                    closeModal: this.closeModal,
+                    setInProgressState: this.setInProgressState,
+                    setApplyError: this.setApplyError,
+                }}
+            >
+                <div className={`app-wrap ${isModalOpen ? 'modal-open' : ''}`}>
+                    {children}
+                </div>
+                {modalData && isModalOpen && (
+                    <Modal
+                        title={modalData.title}
+                        isInProgress={modalData.isInProgress}
+                        applyBtnLabel={modalData.applyBtnLabel}
+                        applyBtnInProgresLabel={modalData.applyBtnInProgresLabel}
+                        applyBtnErrorLabel={modalData.applyBtnErrorLabel}
+                        closeOnOverlay={modalData.closeOnOverlay}
+                        onApply={this.handleApply}
+                        onCancel={this.handleCancel}
+                    >
+                        {modalData.children}
+                    </Modal>
+                )}
+            </ModalContext.Provider>
+        );
+    }
+}

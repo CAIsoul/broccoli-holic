@@ -4,36 +4,56 @@ import RequestForm, { RequestInviteFormRef } from './components/Modal/RequestInv
 import { api } from './services/ApiService';
 
 import './App.scss'
+import { AxiosError } from 'axios';
 
 function App() {
-  const { openModal, closeModal } = useContext(ModalContext);
+  const { openModal, closeModal, setInProgressState, setApplyError } = useContext(ModalContext);
   const formRef = useRef<RequestInviteFormRef>(null);
 
   function openRequestInviteForm() {
     openModal({
       title: 'Request an invite',
       applyBtnLabel: 'Send',
-      content: <RequestForm ref={formRef} />,
-      closeOnOverlay: false,
+      applyBtnInProgresLabel: 'Sending, please wait...',
+      children: <RequestForm ref={formRef} />,
+      closeOnOverlay: true,
       onApply: async function requestInvite() {
         try {
           if (!formRef?.current) {
             return;
           }
 
-          const { name, email } = formRef.current.getFormData();
+          const { name, email, allValid } = formRef.current.getFormData();
 
-          if (!name || !email) {
+          if (!allValid) {
             return;
           }
 
+          setApplyError('');
+          setInProgressState(true);
           const res = await api.requestForInvite(name, email);
-          console.log(res);
-        }
-        catch (error) {
+
+          if (res === true) {
+            closeModal();
+            openRequestCompleteModal();
+          }
 
         }
+        catch (error: any) {
+          setApplyError(error.response?.data?.errorMessage ?? error.message);
+        }
+
+        setInProgressState(false);
       }
+    });
+  }
+
+  function openRequestCompleteModal() {
+    openModal({
+      title: 'All done!',
+      applyBtnLabel: 'OK',
+      children: <div style={{ marginBottom: '10px', textAlign: 'center' }}>You will be one of the first to experience<br /> Broccoli & Co. when we launch.</div>,
+      closeOnOverlay: true,
     });
   }
 

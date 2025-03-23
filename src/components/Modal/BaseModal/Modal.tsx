@@ -2,39 +2,50 @@ import React from "react";
 
 import './Modal.scss';
 
-export interface ModalProp {
+export interface ModalProps {
     title: string;
     children: any;
     closeOnOverlay: boolean;
+    isInProgress: boolean;
     applyBtnLabel: string;
+    applyBtnInProgresLabel: string;
+    applyBtnErrorLabel: string;
     onApply: any;
     onCancel: any;
 }
 
-const Modal: React.FC<ModalProp> = (props) => {
-    let { title, children,
-        closeOnOverlay, applyBtnLabel,
-        onApply, onCancel } = props;
+const Modal: React.FC<ModalProps> = (props) => {
+    let { title, children, isInProgress,
+        closeOnOverlay, applyBtnLabel, applyBtnInProgresLabel,
+        applyBtnErrorLabel, onApply, onCancel } = props;
 
-    function handleOverlayClick(evt: any) {
+    function handleOverlayMouseDown(evt: any) {
         if (closeOnOverlay) {
             onCancel();
         }
     }
 
-    function handleModalClick(evt: any) {
+    function handleModalMouseDown(evt: any) {
         evt.stopPropagation();
-        evt.preventDefault();
+    }
+
+    function handleApplyClick() {
+        if (isInProgress) {
+            return;
+        }
+
+        onApply();
     }
 
     return (
-        <div className="modal-overlay" onClick={handleOverlayClick}>
-            <div className="modal-container" onClick={handleModalClick}>
+        <div className="modal-overlay" onMouseDown={handleOverlayMouseDown} >
+            <div className="modal-container" onMouseDown={handleModalMouseDown}>
                 <h4>{title}</h4>
                 {children}
-                <button onClick={onApply}>
-                    {applyBtnLabel}
+                <button className={isInProgress ? 'in-progress' : ''} onClick={handleApplyClick}>
+                    {isInProgress ? applyBtnInProgresLabel : applyBtnLabel}
                 </button>
+                {applyBtnErrorLabel && <div className="apply-result">{applyBtnErrorLabel}</div>}
             </div>
         </div>
     );
