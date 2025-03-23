@@ -3,6 +3,7 @@ import React from "react";
 import './Modal.scss';
 
 export interface ModalProps {
+    isOpen: boolean;
     title: string;
     children: any;
     closeOnOverlay: boolean;
@@ -15,7 +16,7 @@ export interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = (props) => {
-    let { title, children, isInProgress,
+    let { isOpen, title, children, isInProgress,
         closeOnOverlay, applyBtnLabel, applyBtnInProgresLabel,
         applyBtnErrorLabel, onApply, onCancel } = props;
 
@@ -38,11 +39,13 @@ const Modal: React.FC<ModalProps> = (props) => {
     }
 
     return (
-        <div className="modal-overlay" onMouseDown={handleOverlayMouseDown} >
+        <div className={`modal-overlay ${isOpen ? 'open' : ''} ${isInProgress ? 'in-progress' : ''}`}
+            onMouseDown={handleOverlayMouseDown}
+        >
             <div className="modal-container" onMouseDown={handleModalMouseDown}>
                 <h4>{title}</h4>
                 {children}
-                <button className={isInProgress ? 'in-progress' : ''} onClick={handleApplyClick}>
+                <button onClick={handleApplyClick}>
                     {isInProgress ? applyBtnInProgresLabel : applyBtnLabel}
                 </button>
                 {applyBtnErrorLabel && <div className="apply-result">{applyBtnErrorLabel}</div>}

@@ -2,6 +2,8 @@ import React from "react";
 import { validateEmail } from "../../services/ValidateService";
 import { ValidationItem } from "../../shared/models/Validation";
 
+import './CustomInput.scss';
+
 export interface CustomInputRef {
     getValue: Function;
     triggerValidation: Function;
@@ -101,6 +103,12 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
         return this.state.value;
     }
 
+    /**
+     * Actively trigger validation for all levels.
+     *
+     * @return {*}  {boolean}
+     * @memberof CustomInput
+     */
     triggerValidation(): boolean {
         const errMsg = this.validateValue(this.state.value, 5);
         this.setState({ error: errMsg });
@@ -108,6 +116,12 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
         return errMsg === '';
     }
 
+    /**
+     * Handle input value change event.
+     *
+     * @param {*} evt
+     * @memberof CustomInput
+     */
     handleValueChange(evt: any) {
         const VALIDATION_DELAY = 800;
         const newVal = evt.target.value;
@@ -116,6 +130,7 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
         clearTimeout(this.pendingValidation);
         this.pendingValidation = setTimeout(
             () => {
+                // Only for level 1 validation
                 const errMsg = this.validateValue(newVal, 1);
                 this.setState({
                     error: errMsg,
@@ -140,10 +155,11 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
 
     render() {
         const { value, error, isTyping } = this.state;
+        const showError = !isTyping && error;
 
         return (
-            <div style={styles.container}>
-                <input style={styles.input}
+            <div className={`custom-input ${showError ? 'highlight-error' : ''}`}>
+                <input
                     type={this.type}
                     id={this.id}
                     name={this.name}
@@ -151,30 +167,11 @@ class CustomInput extends React.Component<CustomInputProps, CustomInputState> {
                     placeholder={this.placeholder}
                     onChange={this.handleValueChange.bind(this)}
                 />
-                {!isTyping && error && <div style={styles.error}
-                    className="errorMsg">
+                {showError && <div className="error-msg">
                     {error}
                 </div>}
             </div>
         );
-    }
-}
-const styles: any = {
-    container: {
-        height: '50px'
-    },
-    input: {
-        display: 'block',
-        width: '100%',
-        height: '35px',
-        boxSizing: 'border-box'
-    },
-    error: {
-        height: '15px',
-        lineHeight: '15px',
-        fontSize: '10px',
-        color: 'red',
-        wordSpacing: '0'
     }
 }
 

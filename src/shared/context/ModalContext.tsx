@@ -14,6 +14,7 @@ interface ModalState {
 }
 
 const defaultModalProps: ModalProps = {
+    isOpen: false,
     title: '',
     children: '',
     isInProgress: false,
@@ -122,8 +123,9 @@ export class ModalProvider extends Component<ModalProps, ModalState>{
                 <div className={`app-wrap ${isModalOpen ? 'modal-open' : ''}`}>
                     {children}
                 </div>
-                {modalData && isModalOpen && (
+                {
                     <Modal
+                        isOpen={isModalOpen}
                         title={modalData.title}
                         isInProgress={modalData.isInProgress}
                         applyBtnLabel={modalData.applyBtnLabel}
@@ -135,7 +137,7 @@ export class ModalProvider extends Component<ModalProps, ModalState>{
                     >
                         {modalData.children}
                     </Modal>
-                )}
+                }
             </ModalContext.Provider>
         );
     }

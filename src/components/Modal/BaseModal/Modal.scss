@@ -7,10 +7,29 @@
      bottom: 0;
      left: 0;
      right: 0;
-     display: flex;
      justify-content: center;
      align-items: center;
      z-index: zIndex.$modalOverlay;
+     visibility: hidden;
+     display: flex;
+
+     &.open {
+         visibility: visible;
+
+         .modal-container {
+             transform: translateY(0);
+             opacity: 1;
+         }
+     }
+
+     &.in-progress {
+         pointer-events: none;
+
+         button {
+             border-color: #c9c9c9;
+             color: #c9c9c9;
+         }
+     }
 
      .modal-container {
          background-color: theme.$background-color;
@@ -20,6 +39,11 @@
          display: flex;
          flex-direction: column;
          align-items: center;
+
+         // animation
+         transform: translateY(-100%);
+         opacity: 0;
+         transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 
          h4 {
              margin: 0 0 25px 0;
@@ -39,20 +63,6 @@
              margin-top: 30px;
              margin-bottom: 15px;
              width: 100%;
-
-             &.in-progress {
-                 border-color: #c9c9c9;
-                 color: #c9c9c9;
-             }
-         }
-
-         .errorMsg {
-             font-size: 13px;
-             font-style: italic;
-             height: 15px;
-             line-height: 15px;
-             color: red;
-             word-spacing: 0;
          }
 
          .apply-result {
