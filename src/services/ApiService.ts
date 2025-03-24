@@ -31,6 +31,10 @@ class ApiService {
      */
     async requestForInvite(name: string, email: string) {
         try {
+            if (!name || !email) {
+                return;
+            }
+
             const response = await this._axios.post('/fake-auth', { name, email });
             return response.status === 200;
         }

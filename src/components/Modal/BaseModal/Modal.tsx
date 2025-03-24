@@ -5,7 +5,7 @@ import './Modal.scss';
 export interface ModalProps {
     isOpen: boolean;
     title: string;
-    children: any;
+    children: React.ReactNode;
     closeOnOverlay: boolean;
     isInProgress: boolean;
     applyBtnLabel: string;

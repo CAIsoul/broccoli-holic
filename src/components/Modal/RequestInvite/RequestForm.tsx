@@ -7,14 +7,14 @@ interface RequestFormProps {
 }
 
 interface RequestFormData {
-    name?: string;
-    email?: string;
-    confirmEmail?: string;
+    name: string;
+    email: string;
+    confirmEmail: string;
     allValid: boolean;
 }
 
 export interface RequestInviteFormRef {
-    getFormData: Function;
+    getFormData: () => RequestFormData;
 }
 
 const ERR_MSG = {
@@ -33,9 +33,9 @@ const RequestForm: React.FC<RequestFormProps> = ({ ref }) => {
             const isEmailValid = emailInputRef.current?.triggerValidation();
             const isConfirmEmailValid = confirmEmailInputRef.current?.triggerValidation();
             return {
-                name: nameInputRef.current?.getValue(),
-                email: emailInputRef.current?.getValue(),
-                confirmEmail: confirmEmailInputRef.current?.getValue(),
+                name: nameInputRef.current?.getValue() ?? '',
+                email: emailInputRef.current?.getValue() ?? '',
+                confirmEmail: confirmEmailInputRef.current?.getValue() ?? '',
                 allValid: Boolean(isNameValid && isEmailValid && isConfirmEmailValid),
             }
         },
