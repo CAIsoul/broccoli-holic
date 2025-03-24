@@ -7,8 +7,6 @@ const BASE_URL: string = config.baseApiUrl;
 //     SUCCESS: 'Registered'
 // };
 
-// usedemail@airwallex.com
-
 class ApiService {
     private _axios: AxiosInstance;
 

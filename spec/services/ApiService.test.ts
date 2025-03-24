@@ -24,7 +24,7 @@ xdescribe('ApiService', () => {
         xit('should throw an error on failed request', async () => {
             mockAxios.onPost('/fake-auth').reply(400, { errorMessage: 'Bad Request: Email is already in use' });
 
-            await expect(api.requestForInvite('John Doe', 'usedemail@airwallex.com')).rejects.toThrow();
+            await expect(api.requestForInvite('John Doe', 'usedemail@test.com')).rejects.toThrow();
         });
     });
 });
