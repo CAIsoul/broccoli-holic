@@ -31,5 +31,3 @@ npm run test
 [To Build]
 
 npm run build
-
-#Additional: In order to deploy, you need to update the 'base' value in "vite.config.ts" file.
