@@ -41,7 +41,6 @@ describe('Modal Component', () => {
 
         const dialog = screen.getByRole('dialog');
 
-        console.log(dialog);
         fireEvent.mouseDown(dialog);
 
         expect(mockOnCancel).toHaveBeenCalled();

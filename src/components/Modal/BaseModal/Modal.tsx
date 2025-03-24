@@ -21,11 +21,7 @@ const Modal: React.FC<ModalProps> = (props) => {
         applyBtnErrorLabel, onApply, onCancel } = props;
 
     function handleOverlayMouseDown(_: any) {
-        console.log('[handleOverlayMouseDown]');
-
         if (closeOnOverlay) {
-
-            console.log('[onCancel]');
             onCancel();
         }
     }

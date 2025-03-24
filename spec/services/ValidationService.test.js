@@ -1,5 +1,4 @@
 import { validateFullName, validateEmail } from '../../src/services/ValidateService';
-import '@testing-library/jest-dom';
 
 describe('Test ValidationService', () => {
     // Test validateFullName

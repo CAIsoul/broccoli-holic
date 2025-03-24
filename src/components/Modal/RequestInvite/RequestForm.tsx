@@ -6,7 +6,7 @@ interface RequestFormProps {
     ref: React.ForwardedRef<RequestInviteFormRef>,
 }
 
-interface RequestFormData {
+export interface RequestFormData {
     name: string;
     email: string;
     confirmEmail: string;

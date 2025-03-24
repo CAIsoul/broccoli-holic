@@ -3,7 +3,15 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react"
+    "types": [
+      "jest",
+      "@testing-library/jest-dom"
+    ],
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "ES6"
+    ]
   },
   "references": [
     {
