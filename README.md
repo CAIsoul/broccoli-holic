@@ -3,22 +3,30 @@ Broccoli-holic
 ---------- Basic Info -----------
 
 Development: React + TypeScript + SCSS
+
 Build: Vite
+
 Unit Test: React Testing Library + Jest
+
 Recommended Node Version: 22.12.0
 
 ----------- Dev Steps-------------
 
-[Before All]
-#Step 1: npm install
+[Preparation]
+
+#Step 1: npm install.
+
 #Step 2: Copy the file "config_template.ts" and rename it as "config.ts". Update the baseApiUrl with the actual API address.
 
-[Build]
+[To Build]
+
 npm run build
 
-[Running]
+[To Run]
+
 npm run dev
 
-[Test]
+[To Test]
+
 npm run test
 
